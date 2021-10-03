@@ -27,42 +27,47 @@ class Worker(QRunnable):
         """
         Executes the fetch operation from server and delivers to the GUI class
         """
-        resp = requests.get(url="http://dcraz8317.pythonanywhere.com/station")
-        holder = resp.json()["data"]
 
-        item1 = None
-        item2 = None
-        item3 = None
-        item4 = None
-        item5 = None
-        item6 = None
-        item7 = None
-        item8 = None
-        item9 = None
-        item10 = None
+        try:
+            resp = requests.get(url="http://dcraz8317.pythonanywhere.com/station")
+            holder = resp.json()["data"]
 
-        for tm in holder[self.code]:
-            if tm["destination"] == str("Gidan Kwano"):
-                item1 = tm["id"]
-                item2 = tm["destination"]
-                item3 = tm["status"]
-                eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
-                eta += self.formatSeconds(tm["eta"] % 60)
-                item4 = self.getTimes(tm["eta"])
-                item5 = eta
-            elif tm["destination"] == str("Bosso"):
-                item6 = tm["id"]
-                item7 = tm["destination"]
-                item8 = tm["status"]
-                eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
-                eta += self.formatSeconds(tm["eta"] % 60)
-                item9 = self.getTimes(tm["eta"])
-                item10 = eta
+            item1 = None
+            item2 = None
+            item3 = None
+            item4 = None
+            item5 = None
+            item6 = None
+            item7 = None
+            item8 = None
+            item9 = None
+            item10 = None
+
+            for tm in holder[self.code]:
+                if tm["destination"] == str("Gidan Kwano"):
+                    item1 = tm["id"]
+                    item2 = tm["destination"]
+                    item3 = tm["status"]
+                    eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
+                    eta += self.formatSeconds(tm["eta"] % 60)
+                    item4 = self.getTimes(tm["eta"])
+                    item5 = eta
+                elif tm["destination"] == str("Bosso"):
+                    item6 = tm["id"]
+                    item7 = tm["destination"]
+                    item8 = tm["status"]
+                    eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
+                    eta += self.formatSeconds(tm["eta"] % 60)
+                    item9 = self.getTimes(tm["eta"])
+                    item10 = eta
         
-        print(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, sep="\t")
-        self.signal.result.emit(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10)
+            print(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, sep="\t")
+            self.signal.result.emit(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10)
         
-        self.setAutoDelete(True)
+            self.setAutoDelete(True)
+
+        except:
+            pass
 
     def getTimes(self, val):
         ti = datetime.now()
@@ -399,11 +404,13 @@ class App(QWidget):
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    screen = app.primaryScreen()
+    # screen = app.primaryScreen()
     # print('Screen: %s' % screen.name())
-    size = screen.size()
+    # size = screen.size()
     # print('Size: %d x %d' % (size.width(), size.height()))
-    rect = QDesktopWidget().screenGeometry(-1)
-    print('Available: %d x %d' % (rect.width(), rect.height()))
-    ex = App(rect.width(), rect.height())
+    # rect = QDesktopWidget().screenGeometry(-1)
+    # print('Available: %d x %d' % (rect.width(), rect.height()))
+    # ex = App(rect.width(), rect.height())
+    ex = App(1360, 768)
+    ex.showFullScreen()
     sys.exit(app.exec_())  

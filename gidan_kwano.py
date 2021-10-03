@@ -27,20 +27,28 @@ class Worker(QRunnable):
         """
         Executes the fetch operation from server and delivers to the GUI class
         """
-        resp = requests.get(url="http://dcraz8317.pythonanywhere.com/station")
-        holder = resp.json()["data"]
+        try:
+            resp = requests.get(url="http://dcraz8317.pythonanywhere.com/station")
+            holder = resp.json()["data"]
 
-        for tm in holder[self.code]:
-            item1 = tm["id"]
-            item2 = tm["status"]
-            eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
-            eta += self.formatSeconds(tm["eta"] % 60)
-            item3 = self.getTimes(tm["eta"])
-            item4 = eta
-            print(item1, item2, item3, item4, sep="\t")
-            self.signal.result.emit(item1, item2, item3, item4)
-        
-        self.setAutoDelete(True)
+            item1 = None
+            item2 = None
+            item3 = None
+            item4 = None
+
+            for tm in holder[self.code]:
+                item1 = tm["id"]
+                item2 = tm["status"]
+                eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
+                eta += self.formatSeconds(tm["eta"] % 60)
+                item3 = self.getTimes(tm["eta"])
+                item4 = eta
+                print(item1, item2, item3, item4, sep="\t")
+                self.signal.result.emit(item1, item2, item3, item4)
+
+            self.setAutoDelete(True)
+        except:
+            pass
 
     def getTimes(self, val):
         ti = datetime.now()
@@ -288,11 +296,13 @@ class App(QWidget):
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    screen = app.primaryScreen()
+    # screen = app.primaryScreen()
     # print('Screen: %s' % screen.name())
-    size = screen.size()
+    # size = screen.size()
     # print('Size: %d x %d' % (size.width(), size.height()))
-    rect = QDesktopWidget().screenGeometry(-1)
-    print('Available: %d x %d' % (rect.width(), rect.height()))
-    ex = App(rect.width(), rect.height())
+    # rect = QDesktopWidget().screenGeometry(-1)
+    # print('Available: %d x %d' % (rect.width(), rect.height()))
+    # ex = App(rect.width(), rect.height())
+    ex = App(1360, 768)
+    ex.showFullScreen()
     sys.exit(app.exec_())  
