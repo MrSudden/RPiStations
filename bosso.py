@@ -37,12 +37,15 @@ class Worker(QRunnable):
             item4 = None
 
             for tm in holder[self.code]:
+                unit = "mins"
+                if (tm["eta"] / 60) <= 0:
+                    unit = "secs"
                 item1 = tm["id"]
                 item2 = tm["status"]
                 eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
                 eta += self.formatSeconds(tm["eta"] % 60)
                 item3 = self.getTimes(tm["eta"])
-                item4 = eta
+                item4 = eta + str(unit)
                 print(item1, item2, item3, item4, sep="\t")
                 self.signal.result.emit(item1, item2, item3, item4)
 
@@ -266,25 +269,25 @@ class App(QWidget):
 
 
         self.listPal1 = self.list1.palette()
-        self.list1.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.02)))
+        self.list1.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.05)))
         self.list1.setSpacing(int(self.height * 0.01))
         self.listPal1.setColor(QPalette.Base, Qt.black)
         self.listPal1.setColor(QPalette.Text, Qt.white)
         self.list1.setPalette(self.listPal1)
         self.listPal2 = self.list2.palette()
-        self.list2.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.02)))
+        self.list2.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.05)))
         self.list2.setSpacing(int(self.height * 0.01))
         self.listPal2.setColor(QPalette.Base, Qt.black)
         self.listPal2.setColor(QPalette.Text, Qt.white)
         self.list2.setPalette(self.listPal2)
         self.listPal3 = self.list3.palette()
-        self.list3.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.02)))
+        self.list3.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.05)))
         self.list3.setSpacing(int(self.height * 0.01))
         self.listPal3.setColor(QPalette.Base, Qt.black)
         self.listPal3.setColor(QPalette.Text, Qt.white)
         self.list3.setPalette(self.listPal3)
         self.listPal4 = self.list4.palette()
-        self.list4.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.02)))
+        self.list4.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.05)))
         self.list4.setSpacing(int(self.height * 0.01))
         self.listPal4.setColor(QPalette.Base, Qt.black)
         self.listPal4.setColor(QPalette.Text, Qt.white)

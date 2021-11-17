@@ -44,6 +44,9 @@ class Worker(QRunnable):
             item10 = None
 
             for tm in holder[self.code]:
+                unit = "mins"
+                if (tm["eta"] / 60) <= 0:
+                    unit = "secs"
                 if tm["destination"] == str("Gidan Kwano"):
                     item1 = tm["id"]
                     item2 = tm["destination"]
@@ -51,7 +54,7 @@ class Worker(QRunnable):
                     eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
                     eta += self.formatSeconds(tm["eta"] % 60)
                     item4 = self.getTimes(tm["eta"])
-                    item5 = eta
+                    item5 = eta + str(unit)
                 elif tm["destination"] == str("Bosso"):
                     item6 = tm["id"]
                     item7 = tm["destination"]
@@ -59,7 +62,7 @@ class Worker(QRunnable):
                     eta = str(self.formatSeconds(math.floor(tm["eta"] / 60))) + str(":")
                     eta += self.formatSeconds(tm["eta"] % 60)
                     item9 = self.getTimes(tm["eta"])
-                    item10 = eta
+                    item10 = eta + str(unit)
         
             print(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, sep="\t")
             self.signal.result.emit(item1, item2, item3, item4, item5, item6, item7, item8, item9, item10)
@@ -172,7 +175,7 @@ class App(QWidget):
         item9 = _9
         item10 = _10
 
-        if item1 and item2 and item3 and item4 and item5 and item6 and item7 and item8 and item9 and item10: # Don't add empty strings.
+        if (item1 and item2 and item3 and item4 and item5) or (item6 and item7 and item8 and item9 and item10): # Don't add empty strings.
             # Access the list via the model.
             self.model1.datas.append(item1)
             self.model2.datas.append(item2)
@@ -376,7 +379,7 @@ class App(QWidget):
 
 
         self.listPal1 = self.list1.palette()
-        self.list1.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.02)))
+        self.list1.setFont(QFont("Open Sans Regular", pointSize=int(self.height * 0.05)))
         self.list1.setSpacing(int(self.height * 0.01))
         self.listPal1.setColor(QPalette.Base, Qt.black)
         self.listPal1.setColor(QPalette.Text, Qt.white)
